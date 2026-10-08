@@ -67,11 +67,12 @@ export function deadlinesFor(student, school) {
       .map((d) => ({ ...d, estimated: false }));
   }
   const est = isEstimated(student);
+  // approx: the source gives a typical date ("usually mid-September") or last cycle's date.
   return school.deadlines.map((d) => ({
     ...d,
     date: isoDate(seniorFall + d.y, d.m, d.d),
-    estimated: est,
-  }));
+    estimated: est || !!d.approx,
+  })).sort((a, b) => a.date.localeCompare(b.date));
 }
 
 export function keyDatesFor(student) {

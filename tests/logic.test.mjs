@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   deadlinesFor, tasksFor, agendaFor, upcoming, overdueTasks, currentPhase, gradeLabel,
-  autoAdmitNote, majorNote, checklistFor, addDays, daysBetween, schoolById,
+  autoAdmitNote, majorNote, checklistFor, addDays, daysBetween, schoolById, housingAlerts,
 } from '../js/logic.js';
 import { buildIcs } from '../js/ics.js';
 
@@ -117,4 +117,39 @@ test('ics output is valid-looking and folds long lines', () => {
   assert.match(ics, /TRIGGER:-P0DT15H/);
   assert.equal((ics.match(/BEGIN:VALARM/g) || []).length, 2); // only the first event has alerts
   for (const line of ics.split('\r\n')) assert.ok(new TextEncoder().encode(line).length <= 75, line);
+});
+
+test('housing dates appear and stay after submitting', () => {
+  const s = student({ gradYear: 2027, schools: { tamu: { status: 'submitted', checks: {} } } });
+  const items = agendaFor(s);
+  const pri = items.find((i) => i.uid === 'school-tamu-h-priority');
+  assert.equal(pri.date, '2026-12-01');
+  assert.equal(pri.kind, 'housing');
+  assert.match(pri.detail, /myHousing/);
+  // Approximate housing dates are flagged even for the verified class.
+  assert.equal(items.find((i) => i.uid === 'school-tamu-h-open').estimated, true);
+});
+
+test('every built-in school has housing guidance and a housing checklist step', () => {
+  for (const school of ['ut', 'tamu', 'ttu', 'baylor', 'tcu', 'ou', 'osu'].map(schoolById)) {
+    assert.ok(school.housing && school.housing.earliest && school.housing.url, school.id);
+    assert.ok(school.deadlines.some((d) => d.kind === 'housing'), school.id);
+    assert.ok(checklistFor(student(), school).some((c) => c.id === 'housing'), school.id);
+  }
+});
+
+test('admitted schools without housing done raise a housing alert', () => {
+  const s = student({ schools: {
+    ou: { status: 'admitted', checks: {} },
+    osu: { status: 'admitted', checks: { housing: true } },
+    tcu: { status: 'submitted', checks: {} },
+  } });
+  const alerts = housingAlerts(s);
+  assert.deepEqual(alerts.map((a) => a.school), ['ou']);
+  assert.match(alerts[0].text, /deposit/);
+});
+
+test('UT housing task appears only with UT on the list', () => {
+  assert.ok(tasksFor(student()).some((t) => t.id === 'su-ut-housing'));
+  assert.ok(!tasksFor(student({ schools: { tamu: { status: 'considering', checks: {} } } })).some((t) => t.id === 'su-ut-housing'));
 });

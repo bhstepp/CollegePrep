@@ -1,6 +1,6 @@
 // Network first, so families always get the latest dates when online;
 // falls back to the cached copy when offline.
-const CACHE = 'collegeprep-v1';
+const CACHE = 'collegeprep-v2';
 const SHELL = [
   './',
   'index.html',
