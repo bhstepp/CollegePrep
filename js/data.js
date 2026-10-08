@@ -39,7 +39,9 @@ export const STATUSES = [
 
 // Deadline dates: m/d plus y = years after the senior-fall calendar year
 // (0 = fall of senior year, 1 = spring of senior year).
-// kind: open | early | final | scholarship | docs | decision
+// kind: open | early | final | scholarship | docs | decision | housing
+// housing: { url, how, earliest } explains how rooms are assigned and the
+// earliest moment a family can get in line.
 export const SCHOOLS = [
   {
     id: 'ut', name: 'UT Austin', short: 'UT',
@@ -183,6 +185,7 @@ export const CHECKLIST = [
   { id: 'fee', label: 'Pay fee or get waiver' },
   { id: 'submitted', label: 'Application submitted' },
   { id: 'complete', label: 'Portal shows complete' },
+  { id: 'housing', label: 'Housing application and deposit in' },
 ];
 
 // Dates that apply to every student regardless of school list.

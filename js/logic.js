@@ -169,13 +169,26 @@ export function agendaFor(student, { includeDone = false } = {}) {
     const submitted = SUBMITTED.has(student.schools[id].status);
     for (const d of deadlinesFor(student, school)) {
       if (submitted && (d.kind === 'open' || d.kind === 'early' || d.kind === 'final')) continue;
-      items.push({ type: 'deadline', uid: `school-${id}-${d.id}`, date: d.date, title: `${school.name}: ${d.label}`, detail: school.tip || '', kind: d.kind, school: id, estimated: d.estimated, url: school.url });
+      const housing = d.kind === 'housing' && school.housing;
+      items.push({ type: 'deadline', uid: `school-${id}-${d.id}`, date: d.date, title: `${school.name}: ${d.label}`, detail: housing ? housing.earliest : school.tip || '', kind: d.kind, school: id, estimated: d.estimated, url: housing ? housing.url : school.url });
     }
   }
   for (const k of keyDatesFor(student)) {
     items.push({ type: 'key', uid: `key-${k.id}`, date: k.date, title: k.label, detail: k.detail || '', kind: 'key' });
   }
   return items.sort((a, b) => a.date.localeCompare(b.date) || a.title.localeCompare(b.title));
+}
+
+// Housing usually goes first-come by application or deposit date, so the moment
+// a school says yes, its housing step becomes the most urgent thing on the list.
+export function housingAlerts(student) {
+  return activeSchoolIds(student)
+    .filter((id) => ['admitted', 'deposited'].includes(student.schools[id].status) && !(student.schools[id].checks || {}).housing)
+    .map((id) => {
+      const school = getSchool(student, id);
+      const h = school.housing || {};
+      return { school: id, name: school.name, text: h.earliest || "Apply for housing now: most schools assign rooms in the order applications and deposits come in.", url: h.url || school.url };
+    });
 }
 
 export function upcoming(student, today, days = 30) {
