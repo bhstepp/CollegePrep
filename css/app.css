@@ -15,6 +15,8 @@
   --info: #285d91;
   --info-bg: #e7f0fa;
   --bad: #b3261e;
+  --housing: #6b3fa0;
+  --housing-bg: #f1eafa;
   --radius: 14px;
   --shadow: 0 1px 2px rgba(16, 24, 40, .06), 0 1px 3px rgba(16, 24, 40, .08);
   --tabbar-h: 64px;
@@ -39,6 +41,8 @@
     --info: #9cc3ef;
     --info-bg: #1b2d47;
     --bad: #ff8a80;
+    --housing: #c9a7f2;
+    --housing-bg: #2b2140;
     --shadow: none;
     color-scheme: dark;
   }
@@ -256,6 +260,7 @@ h2 { font-size: 17px; }
 .dot.scholarship { background: var(--good); }
 .dot.decision, .dot.open, .dot.docs { background: var(--muted); }
 .dot.key { background: var(--bad); }
+.dot.housing { background: var(--housing); }
 
 .tag {
   display: inline-block;
@@ -272,6 +277,7 @@ h2 { font-size: 17px; }
 .tag.early, .tag.final { background: var(--warn-bg); color: var(--warn); }
 .tag.scholarship { background: var(--good-bg); color: var(--good); }
 .tag.key { background: color-mix(in srgb, var(--bad) 14%, transparent); color: var(--bad); }
+.tag.housing { background: var(--housing-bg); color: var(--housing); }
 .tag.now { background: var(--info-bg); color: var(--info); }
 .tag.est { text-transform: none; }
 
@@ -342,6 +348,8 @@ main > .flag { margin: 0 0 10px; }
 .flag.good { background: var(--good-bg); color: var(--good); }
 .flag.warn { background: var(--warn-bg); color: var(--warn); }
 .flag.info { background: var(--info-bg); color: var(--info); }
+.flag.housing { background: var(--housing-bg); color: var(--housing); margin-top: 0; }
+.card.urgent { border-color: color-mix(in srgb, var(--housing) 55%, var(--line)); }
 
 .notes {
   width: 100%;
