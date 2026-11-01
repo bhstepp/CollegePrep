@@ -2,7 +2,7 @@ import { SCHOOLS, MAJORS, RANKS, STATUSES, GRAD_YEARS, PHASES, PLAYBOOK_URL, VER
 import {
   todayIso, formatDate, relativeLabel, isEstimated, getSchool, studentSchoolIds, activeSchoolIds,
   deadlinesFor, tasksFor, currentPhase, gradeLabel, majorNote, autoAdmitNote, checklistFor,
-  schoolProgress, agendaFor, upcoming, overdueTasks, testDatesFor, daysBetween,
+  schoolProgress, agendaFor, upcoming, overdueTasks, testDatesFor, daysBetween, housingAlerts,
 } from './logic.js';
 import { buildIcs } from './ics.js';
 import * as store from './store.js';
@@ -109,7 +109,7 @@ function agendaRow(item, t) {
 }
 
 function kindLabel(kind) {
-  return { open: 'Opens', early: 'Early deadline', final: 'Deadline', scholarship: 'Scholarship', docs: 'Documents', decision: 'Decisions', custom: 'Deadline' }[kind] || 'Deadline';
+  return { open: 'Opens', early: 'Early deadline', final: 'Deadline', scholarship: 'Scholarship', docs: 'Documents', decision: 'Decisions', housing: 'Housing', custom: 'Deadline' }[kind] || 'Deadline';
 }
 
 // ---------- views ----------
@@ -119,6 +119,7 @@ function viewToday(student) {
   const phase = currentPhase(student, t);
   const phaseInfo = PHASES.find((p) => p.id === phase);
   const overdue = overdueTasks(student, t);
+  const housingNow = housingAlerts(student);
   const soon = upcoming(student, t, 30);
   const later = soon.length ? [] : agendaFor(student).filter((i) => i.date > t).slice(0, 4);
   const schoolIds = activeSchoolIds(student);
@@ -133,6 +134,16 @@ function viewToday(student) {
     <div class="meter" role="img" aria-label="${planDone} of ${planTasks.length} ${h(phaseInfo.label)} tasks done"><span style="width:${planTasks.length ? Math.round((planDone / planTasks.length) * 100) : 0}%"></span></div>
     <p class="meter-label">${planDone} of ${planTasks.length} ${h(phaseInfo.label.toLowerCase())} tasks done · <a href="#/plan">See the plan</a></p>
   </section>
+
+  ${housingNow.length ? `
+  <section class="card urgent">
+    <h2>Housing: do this now</h2>
+    <ul class="list">${housingNow.map((x) => `
+      <li class="row deadline">
+        <span class="dot housing" aria-hidden="true"></span>
+        <a class="body" href="#/school/${h(x.school)}"><div class="title">${h(x.name)}: apply for housing</div><div class="detail">${h(x.text)}</div></a>
+      </li>`).join('')}</ul>
+  </section>` : ''}
 
   ${overdue.length ? `
   <section class="card">
@@ -253,6 +264,13 @@ function viewSchool(student, id) {
     </ul>
   </section>
 
+  ${s.housing ? `
+  <section class="card housing">
+    <div class="card-head"><h2>Housing</h2><a class="link" href="${h(s.housing.url)}" target="_blank" rel="noopener">Housing site ↗</a></div>
+    <p class="flag housing"><b>Earliest move:</b> ${h(s.housing.earliest)}</p>
+    <p class="small">${h(s.housing.how)}</p>
+  </section>` : ''}
+
   <section class="card">
     <h2>Application checklist</h2>
     <ul class="list">${list.map((c) => {
@@ -297,6 +315,7 @@ function viewAddSchool(student) {
       <label class="field"><span>Early / priority deadline</span><input name="early" type="date"></label>
       <label class="field"><span>Scholarship deadline</span><input name="scholarship" type="date"></label>
       <label class="field"><span>Final deadline</span><input name="final" type="date"></label>
+      <label class="field"><span>Housing application opens</span><input name="housing" type="date"><small>Apply the day it opens; rooms usually go first-come.</small></label>
       <button class="btn primary block" type="submit">Add school</button>
     </form>
   </section>`;
@@ -536,6 +555,7 @@ function saveCustomSchool(form, data) {
     ['early', 'early', 'Early / priority deadline'],
     ['scholarship', 'scholarship', 'Scholarship deadline'],
     ['final', 'final', 'Final deadline'],
+    ['housing', 'housing', 'Housing application opens'],
   ].map(([field, kind, label]) => ({ id: field, kind, label, date: data.get(field) || '' })).filter((d) => d.date);
   let url = String(data.get('url') || '').trim();
   if (url && !/^https?:\/\//i.test(url)) url = '';

@@ -39,7 +39,9 @@ export const STATUSES = [
 
 // Deadline dates: m/d plus y = years after the senior-fall calendar year
 // (0 = fall of senior year, 1 = spring of senior year).
-// kind: open | early | final | scholarship | docs | decision
+// kind: open | early | final | scholarship | docs | decision | housing
+// housing: { url, how, earliest } explains how rooms are assigned and the
+// earliest moment a family can get in line.
 export const SCHOOLS = [
   {
     id: 'ut', name: 'UT Austin', short: 'UT',
@@ -57,7 +59,16 @@ export const SCHOOLS = [
       { id: 'rd-docs', kind: 'docs', label: 'Final documents due', m: 12, d: 10, y: 0 },
       { id: 'ea-dec', kind: 'decision', label: 'Early Action decisions or deferrals', m: 1, d: 15, y: 1 },
       { id: 'rd-dec', kind: 'decision', label: 'Regular decisions', m: 2, d: 15, y: 1 },
+      { id: 'h-open', kind: 'housing', label: 'Housing application opens (admission application must be in; admission not needed)', m: 8, d: 1, y: 0 },
+      { id: 'h-offers', kind: 'housing', label: 'Housing contract offers begin, in application-date order', m: 2, d: 15, y: 1 },
+      { id: 'h-cancel', kind: 'housing', label: 'Last day for the lowest housing cancellation fee', m: 6, d: 1, y: 1, approx: true },
+      { id: 'h-select', kind: 'housing', label: 'Freshman room selection begins (early June)', m: 6, d: 5, y: 1, approx: true },
     ],
+    housing: {
+      url: 'https://housing.utexas.edu/housing/residence-halls/residence-hall-application-process/future-residents',
+      earliest: "Submit UT's admission application in early August, then the housing application and $100 fee the same day. You don't need to be admitted, and your housing application date sets your place in line for both the contract offer and room selection.",
+      how: 'First-come by housing application date, with priority for first-time freshmen. Contracts go out on the 1st and 15th of each month starting Feb 15; to sign, accept admission, pay the enrollment deposit and a $300 prepayment. Room selection starts in early June. Cancellation fees rise after June 1. No live-on requirement.',
+    },
     extras: [
       { id: 'resume', label: 'Expanded resume (optional)' },
       { id: 'calc', label: 'Calculus readiness met (Cockrell)', majors: ['engineering'] },
@@ -75,7 +86,15 @@ export const SCHOOLS = [
       { id: 'open', kind: 'open', label: 'Application opens', m: 8, d: 1, y: 0 },
       { id: 'rd', kind: 'final', label: 'Final deadline', m: 12, d: 1, y: 0 },
       { id: 'rd-docs', kind: 'docs', label: 'Documents due', m: 12, d: 15, y: 0 },
+      { id: 'h-open', kind: 'housing', label: 'Housing application usually opens (admitted students)', m: 9, d: 15, y: 0, approx: true },
+      { id: 'h-priority', kind: 'housing', label: 'Housing priority deadline: apply by today to choose your room', m: 12, d: 1, y: 0 },
+      { id: 'h-full', kind: 'housing', label: 'Housing typically full; waitlist begins', m: 2, d: 1, y: 1, approx: true },
     ],
+    housing: {
+      url: 'https://reslife.tamu.edu/apply/',
+      earliest: 'Apply for admission early (decisions are rolling), then apply for housing in myHousing the day you are admitted, and no later than December 1 to get a room-selection timeslot.',
+      how: 'First-come, first-served after admission, with a $75 non-refundable fee. Applicants by Dec 1 pick a specific room; later applicants are auto-assigned. Once full, usually by February, students go on a waitlist. No freshman live-on requirement.',
+    },
     extras: [
       { id: 'ga', label: 'Read up on Entry to a Major and pathway options', majors: ['engineering'] },
     ],
@@ -94,7 +113,16 @@ export const SCHOOLS = [
       { id: 'sch', kind: 'scholarship', label: 'Priority scholarship deadline', m: 12, d: 1, y: 0 },
       { id: 'merit', kind: 'scholarship', label: 'Admitted by today = merit guaranteed', m: 4, d: 1, y: 1 },
       { id: 'rd', kind: 'final', label: 'Priority application deadline', m: 5, d: 1, y: 1 },
+      { id: 'h-priority', kind: 'housing', label: 'Housing Express Pass priority tiers close (approx.)', m: 11, d: 17, y: 0, approx: true },
+      { id: 'h-select', kind: 'housing', label: 'Housing room selection opens', m: 12, d: 2, y: 0, approx: true },
+      { id: 'h-refund', kind: 'housing', label: 'Last day housing deposit is refundable', m: 5, d: 1, y: 1, approx: true },
+      { id: 'h-final', kind: 'housing', label: 'Housing contract must be complete (freshmen live on campus)', m: 6, d: 1, y: 1, approx: true },
     ],
+    housing: {
+      url: 'https://www.depts.ttu.edu/housing/express-pass/',
+      earliest: 'Apply in July when ApplyTexas opens. The day you are admitted, activate your eRaider account and finish all four Red Raider Express Pass steps ($100 fee + $400 deposit) to land in the earliest room-choice tier.',
+      how: 'First-come after admission. Completing the Express Pass steps early earns Raider Elite, then Raider Priority, room choice before general selection opens in early December. First-year students must live on campus, and housing reached capacity for 2026–27. The $400 deposit is refundable through May 1.',
+    },
     extras: [
       { id: 'grid', label: 'Check the merit scholarship grid' },
     ],
@@ -113,7 +141,16 @@ export const SCHOOLS = [
       { id: 'ed-dec', kind: 'decision', label: 'Early Decision results', m: 12, d: 15, y: 0 },
       { id: 'rd', kind: 'final', label: 'Regular deadline (EA results by today)', m: 2, d: 1, y: 1 },
       { id: 'rd-dec', kind: 'decision', label: 'Regular decisions', m: 4, d: 10, y: 1 },
+      { id: 'h-ed', kind: 'housing', label: 'Early Decision: pay deposit by today for first choice of housing', m: 2, d: 15, y: 1 },
+      { id: 'h-open', kind: 'housing', label: 'Housing application opens (deposit required)', m: 3, d: 1, y: 1, approx: true },
+      { id: 'h-priority', kind: 'housing', label: 'Housing application deadline for room selection', m: 4, d: 15, y: 1, approx: true },
+      { id: 'h-select', kind: 'housing', label: 'Choose Your Room begins', m: 5, d: 11, y: 1, approx: true },
     ],
+    housing: {
+      url: 'https://cll.web.baylor.edu/apply/apply-housing-new-first-years',
+      earliest: 'Housing applications open around March 1, and applying early inside the window gives no advantage. The real lever is Early Decision: ED admits who pay the $500 deposit by Feb 15 and apply by April 15 get first choice of housing, with room-pick order set by deposit date.',
+      how: 'Requires admission and the $500 enrollment deposit. Everyone who applies by the April 15 deadline gets roommate matching and a Choose Your Room timeslot in May; others are assigned in mid-June. First-year students must live on campus.',
+    },
     extras: [
       { id: 'ed', label: 'Decide: binding Early Decision or Early Action' },
     ],
@@ -131,7 +168,15 @@ export const SCHOOLS = [
       { id: 'honors', kind: 'scholarship', label: 'Honors application due', m: 11, d: 15, y: 0 },
       { id: 'early-dec', kind: 'decision', label: 'Early decisions', m: 1, d: 1, y: 1 },
       { id: 'rd', kind: 'final', label: 'Regular / ED II deadline', m: 2, d: 1, y: 1 },
+      { id: 'h-deposit', kind: 'housing', label: 'Deposit and meningitis record due (unlocks housing)', m: 5, d: 1, y: 1 },
+      { id: 'h-open', kind: 'housing', label: 'Housing application window opens (about two weeks)', m: 5, d: 1, y: 1, approx: true },
+      { id: 'h-close', kind: 'housing', label: 'Housing application window closes', m: 5, d: 15, y: 1, approx: true },
     ],
+    housing: {
+      url: 'https://housing.tcu.edu/first-year/',
+      earliest: 'Pay the $500 deposit and send the meningitis vaccine record well before May 1, since the record unlocks the housing application. Then apply the day the short May window opens; placement is not first-come within it.',
+      how: 'Rooms are auto-assigned after the window closes, using up to nine hall preferences plus roommate requests; assignments arrive in June and unassigned students are waitlisted. First- and second-year students must live on campus. Cancelling after May 1 costs $2,000 or more.',
+    },
     extras: [
       { id: 'honors', label: 'Honors application' },
       { id: 'css', label: 'CSS Profile' },
@@ -150,7 +195,15 @@ export const SCHOOLS = [
       { id: 'sch', kind: 'scholarship', label: 'Scholarship deadline', m: 12, d: 15, y: 0 },
       { id: 'rd', kind: 'final', label: 'Final admission deadline', m: 2, d: 1, y: 1 },
       { id: 'scores', kind: 'scholarship', label: 'Last day to update scores for scholarships', m: 4, d: 30, y: 1 },
+      { id: 'h-open', kind: 'housing', label: 'Housing contract opens (deposit first; deposit date sets room-pick order)', m: 11, d: 10, y: 0 },
+      { id: 'h-due', kind: 'housing', label: 'Housing contract due for a room-selection time; last free cancellation', m: 5, d: 1, y: 1 },
+      { id: 'h-select', kind: 'housing', label: 'Room selection begins', m: 5, d: 20, y: 1, approx: true },
     ],
+    housing: {
+      url: 'https://ou.edu/housingandfood/housing/first-year-process',
+      earliest: 'Pay the $250 enrollment deposit the day you are admitted, because deposit date sets your room-selection order. Then sign the housing contract and pay the $175 advance as soon as it opens in November. Both are refundable until May 1.',
+      how: 'Room-selection access times follow enrollment-deposit date. You must have the deposit paid and contract done by May 1 to get an access time; selection runs late May into June. Freshmen must live in university housing.',
+    },
     extras: [],
   },
   {
@@ -164,7 +217,17 @@ export const SCHOOLS = [
       { id: 'open', kind: 'open', label: 'OSU application opens', m: 7, d: 1, y: 0 },
       { id: 'early', kind: 'scholarship', label: 'Early Opportunity Scholarship deadline', m: 11, d: 1, y: 0 },
       { id: 'sch', kind: 'final', label: 'Priority scholarship deadline', m: 2, d: 1, y: 1 },
+      { id: 'h-llp', kind: 'housing', label: 'Living Learning Program applications open', m: 10, d: 15, y: 0 },
+      { id: 'h-deposit', kind: 'housing', label: 'Enrollment deposit opens: pay today for housing priority', m: 12, d: 1, y: 0 },
+      { id: 'h-open', kind: 'housing', label: 'Housing registration opens (8 a.m.)', m: 12, d: 15, y: 0 },
+      { id: 'h-llp-pri', kind: 'housing', label: 'Living Learning Program priority deadline', m: 1, d: 15, y: 1 },
+      { id: 'h-priority', kind: 'housing', label: 'Housing priority deadline: preferences and roommate group', m: 3, d: 1, y: 1 },
     ],
+    housing: {
+      url: 'https://reslife.okstate.edu/registration/dates-deadlines/upcoming-academic-year',
+      earliest: 'Pay the $300 enrollment deposit on December 1, the day it opens (or the day you are admitted, if later). Deposit date is the main factor in housing assignments. Then register for housing at 8 a.m. on December 15.',
+      how: 'Assignments follow deposit date and preferences. Attending an Admitted Student Day and registering by March 1 moves you to the top of the list. Freshmen must live on campus or pay a fee equal to two semesters of housing.',
+    },
     extras: [
       { id: 'resume', label: 'Leadership & involvement resume' },
     ],
@@ -183,6 +246,7 @@ export const CHECKLIST = [
   { id: 'fee', label: 'Pay fee or get waiver' },
   { id: 'submitted', label: 'Application submitted' },
   { id: 'complete', label: 'Portal shows complete' },
+  { id: 'housing', label: 'Housing application and deposit in' },
 ];
 
 // Dates that apply to every student regardless of school list.
@@ -241,6 +305,7 @@ export const TASKS = [
   { id: 'su-short', phase: 'summer', m: 7, d: 31, y: -1, title: 'Draft school-specific short answers', detail: 'UT and A&M ask why you chose your major. Keep a master doc of every prompt and answer.' },
   { id: 'su-resume', phase: 'summer', m: 7, d: 31, y: -1, title: 'Build the activities list and resume from the log', detail: "OSU asks for a leadership and involvement resume; UT allows an expanded resume." },
   { id: 'su-accounts', phase: 'summer', m: 8, d: 5, y: -1, title: 'Create application accounts and copy in finished essays', detail: 'Common App, ApplyTexas and most school applications open August 1.' },
+  { id: 'su-ut-housing', phase: 'summer', m: 8, d: 3, y: -1, title: "Submit UT's application, then its housing application the same day", detail: "UT's housing line opens August 1 and goes by housing-application date. You don't need to be admitted, just have the admission application in.", schools: ['ut'] },
   { id: 'su-rank', phase: 'summer', m: 8, d: 20, y: -1, title: 'Ask the counselor about official rank and transcripts', detail: 'Confirm how each school receives rank.' },
   { id: 'su-brag', phase: 'summer', m: 8, d: 25, y: -1, title: 'Send recommenders a brag sheet', detail: 'Activities, goals, and the specific colleges and majors, with deadlines.' },
   { id: 'su-sat', phase: 'summer', m: 8, d: 31, y: -1, title: 'Late-August SAT, if a higher score is needed', detail: 'Only if it moves a UT, engineering or scholarship outcome.', optional: true },
@@ -251,6 +316,7 @@ export const TASKS = [
   { id: 'se-fafsa', phase: 'senior', m: 10, d: 15, y: -1, title: 'File the FAFSA (and CSS Profile if needed)', detail: 'FAFSA opens October 1. Many merit and state programs check it. TCU also uses the CSS Profile.' },
   { id: 'se-submit', phase: 'senior', m: 10, d: 15, y: -1, title: 'Submit every application', detail: 'The recommended internal deadline. Clears UT Early Action and every November 1 early round.' },
   { id: 'se-portals', phase: 'senior', m: 10, d: 31, y: -1, title: 'Check every applicant portal weekly', detail: 'Clear any missing-document flags. Keep doing this until each one says complete.' },
+  { id: 'se-housing', phase: 'senior', m: 11, d: 1, y: -1, title: "Line up each school's housing step", detail: "Housing is often first-come. At A&M and Tech it goes by application date after admission; at OU and OSU by enrollment-deposit date. Act the day each admission arrives (see each school's Housing section)." },
   { id: 'se-honors', phase: 'senior', m: 11, d: 15, y: -1, title: 'Apply to honors programs', detail: 'TCU Honors Nov 15; check UT, A&M, OU and Baylor honors dates.' },
   { id: 'se-local', phase: 'senior', m: 12, d: 15, y: -1, title: 'Start local scholarship applications', detail: "From the counselor's list. Small ones add up." },
   { id: 'se-midyear', phase: 'senior', m: 1, d: 31, y: 0, title: 'Send mid-year grades if requested; keep grades up', detail: 'Admissions can be revoked.' },
